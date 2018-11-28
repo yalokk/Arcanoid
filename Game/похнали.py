@@ -11,7 +11,7 @@ class Sprite:
     def render(self):
         screen.blit(self.bitmap, (self.x, self.y))
 
-
+'''Сравнение координат Соболевой и ракетки'''
 def Intersect(x1, x2, y1, y2):
     if (x1 > x2 - 60) and (x1 < x2 + 45) and (y1 > y2 - 20) and (y1 < y2 + 45):
         return 1
