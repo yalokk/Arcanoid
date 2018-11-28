@@ -26,10 +26,12 @@ screen = pygame.Surface((600, 700))
 x = 0
 y = 0
 
-Soboleva = Sprite(0, 0, 'soboleva.png')  # поправить координаты Соболевой
-racket = Sprite(40, 685, 'racket.png')
+'''Описание Соболевой (мяч)'''
+Soboleva = Sprite(0, 0, 'soboleva.png')  # поправить стартовые координаты Соболевой
 Soboleva.go_right = True
 Soboleva.go_down = True
+'''Описание ракетки'''
+racket = Sprite(40, 685, 'racket.png')
 
 down = True
 pygame.key.set_repeat(1, 1)
@@ -38,7 +40,7 @@ while down:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             done = False
-        '''перемещение с помощью клавиш'''
+        '''перемещение ракетки с помощью клавиш'''
         if e.type == pygame.KEYDOWN:
             if e.key == pygame.K_LEFT:
                 if racket.x > 0:
@@ -47,9 +49,10 @@ while down:
                 if racket.x < 540:
                     racket.x += 2
 
+    '''заливка экрана''' # поменять на картинку
     screen.fill((70, 200, 40))  # цвет фона
 
-    # корект движение соболевой
+    '''передвижение Соболевой''' # корект движение (отскакивание от пола)
     if Soboleva.go_right == True:
         Soboleva.x += 0.7
         if Soboleva.x > 555:
@@ -71,6 +74,7 @@ while down:
     if Intersect(racket.x, Soboleva.x, racket.y, Soboleva.y) == True:
         Soboleva.go_down = False
 
+    '''отрисовка объектов'''
     racket.render()  # выводим ракетку в нужные координаты
     Soboleva.render()  # выводим Соболеву в нужные координаты
     window.blit(screen, (0, 0))
