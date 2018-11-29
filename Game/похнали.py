@@ -1,6 +1,5 @@
 import pygame
 
-
 class Sprite:
     def __init__(self, xpos, ypos, filename):
         self.x = xpos
@@ -11,9 +10,29 @@ class Sprite:
     def render(self):
         screen.blit(self.bitmap, (self.x, self.y))
 
-'''Сравнение координат Соболевой и ракетки'''
-def Intersect(x1, x2, y1, y2):
-    if (x1 > x2 - 60) and (x1 < x2 + 45) and (y1 > y2 - 20) and (y1 < y2 + 45):
+'''Кирпичи'''     
+class Brick(Sprite):
+    def __init__(self, xpos, ypos, filename):
+        self.x = xpos
+        self.y = ypos
+        self.len = 70
+        self.height = 70
+        self.bitmap = pygame.image.load(filename)
+emil = Brick(0, 0, 'image/emil')
+kolya = Brick(245, 70, 'image/kolya')
+zahar = Brick(315, 70, 'image/zahar')
+#sergo 
+#liza
+#nadya
+#lesha
+#gleb
+#margo
+
+       
+    
+'''Пересечение 2х объектов'''
+def Intersect(x1, x2, y1, y2, len1, len2, height1, height2):
+    if (x1 > x2 - len1) and (x1 < x2 + len2) and (y1 > y2 - height1) and (y1 < y2 + height2):
         return 1
     else:
         return 0
@@ -35,6 +54,7 @@ Soboleva.go_down = True
 '''Описание ракетки'''
 racket = Sprite(40, 685, 'image/racket.png')
 
+'''ИГРОВОЙ ЦИКЛ'''
 down = True
 pygame.key.set_repeat(1, 1)
 while down:
@@ -51,8 +71,8 @@ while down:
                 if racket.x < 540:
                     racket.x += 2
 
-    '''заливка экрана''' # поменять на картинку + !всегда раньше отрисовки объектов!
-    screen.fill((70, 200, 40))  # цвет фона
+    '''заливка экрана''' 
+    screen = pygame.image.load('image/screen.png')
 
     '''передвижение Соболевой''' # корект движение (отскакивание от пола)
     if Soboleva.go_right == True:
@@ -73,7 +93,7 @@ while down:
         if Soboleva.y <= 0:
             Soboleva.go_down = True
 
-    if Intersect(racket.x, Soboleva.x, racket.y, Soboleva.y) == True:
+    if Intersect(racket.x, Soboleva.x, racket.y, Soboleva.y, 60, 45, 20, 45) == True:
         Soboleva.go_down = False
 
     '''отрисовка объектов'''
