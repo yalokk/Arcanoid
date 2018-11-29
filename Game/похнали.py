@@ -12,15 +12,17 @@ class Sprite:
 
 '''Кирпичи'''     
 class Brick:
-    def __init__(self, xpos, ypos, filename):
+    def __init__(self, xpos, ypos, filename, score):
         self.x = xpos
         self.y = ypos
         self.len = 70
         self.height = 70
         self.bitmap = pygame.image.load(filename)
-emil = Brick(0, 0, 'image/emil')
-kolya = Brick(245, 70, 'image/kolya')
-zahar = Brick(315, 70, 'image/zahar')
+        self.score = score
+        
+emil = Brick(0, 0, 'image/emil', 10)
+kolya = Brick(245, 70, 'image/kolya', 9)
+zahar = Brick(315, 70, 'image/zahar', 8)
 #sergo 
 #liza
 #nadya
