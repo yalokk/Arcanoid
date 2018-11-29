@@ -19,10 +19,28 @@ class Brick:
         self.height = 70
         self.bitmap = pygame.image.load(filename)
         self.score = score
+    def render(self):
+        screen.blit(self.bitmap, (self.x, self.y))
+        
+        
+    '''Передвижение Эмиля, Захара и Коли'''
+def ezk_go(name, step):
+    if name.go_right == True:
+        name.x += step
+        if name.x > 560:
+            name.go_right = False
+    else:
+        name.x -= step
+        if name.x <= 0:
+            name.go_right = True
+
         
 emil = Brick(0, 0, 'image/emil.png', 10)
-kolya = Brick(245, 70, 'image/kolya.png', 8)
-zahar = Brick(315, 70, 'image/zahar.png', 8)
+emil.go_right = True
+kolya = Brick(0, 70, 'image/kolya.png', 8)
+kolya.go_right = True
+zahar = Brick(560, 70, 'image/zahar.png', 8)
+zahar.go_right = True
 bricks = [emil, kolya, zahar]
 #sergo 
 #liza
@@ -62,13 +80,15 @@ score_font = pygame.font.Font('font/foo.otf', 37)
 Soboleva = Sprite(0, 0, 'image/soboleva.png')  # поправить стартовые координаты Соболевой
 Soboleva.go_right = True
 Soboleva.go_down = True
+step_sob = 5
 '''Описание ракетки'''
 racket = Sprite(40, 685, 'image/racket.png')
+step_rac = 9
 
 '''ИГРОВОЙ ЦИКЛ'''
-down = True
+done = True
 pygame.key.set_repeat(1, 1)
-while down:
+while done:
     '''обработчик событий'''
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
@@ -77,10 +97,10 @@ while down:
         if e.type == pygame.KEYDOWN:
             if e.key == pygame.K_LEFT:
                 if racket.x > 0:
-                    racket.x -= 2
+                    racket.x -= step_rac
             if e.key == pygame.K_RIGHT:
-                if racket.x < 540:
-                    racket.x += 2
+                if racket.x < 570:
+                    racket.x += step_rac
 
     '''заливка экрана''' 
     screen = pygame.image.load('image/screen.png')
@@ -89,29 +109,34 @@ while down:
 
     '''передвижение Соболевой''' 
     if Soboleva.go_right == True:
-        Soboleva.x += 0.7
+        Soboleva.x += step_sob
         if Soboleva.x > 585:
             Soboleva.go_right = False
     else:
-        Soboleva.x -= 0.7
+        Soboleva.x -= step_sob
         if Soboleva.x <= 0:
             Soboleva.go_right = True
 
     if Soboleva.go_down == True:
-        Soboleva.y += 0.7
+        Soboleva.y += step_sob
         if Soboleva.y > 655:
             Soboleva.go_down = False
     else:
-        Soboleva.y -= 0.7
+        Soboleva.y -= step_sob
         if Soboleva.y <= 0:
             Soboleva.go_down = True
+            
+    '''Передвижение Эмиля, Захара и Коли'''
+    ezk_go(emil, 11)
+    ezk_go(zahar, 9)
+    ezk_go(kolya, 9)
 
     '''Проверка сталкивания Соболевой и ракетки'''
     if Intersect(racket.x, Soboleva.x, racket.y, Soboleva.y, 60, 45, 20, 45) == True:
         Soboleva.go_down = False
         
     '''Минус очки в случае удара НЕ о ракетку'''
-    if Soboleva.y >= 655:
+    if Soboleva.y == 655:
         score -= 1
 
     '''отрисовка объектов'''
