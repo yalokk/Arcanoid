@@ -29,11 +29,11 @@ x = 0
 y = 0
 
 '''Описание Соболевой (мяч)'''
-Soboleva = Sprite(0, 0, 'soboleva.png')  # поправить стартовые координаты Соболевой
+Soboleva = Sprite(0, 0, 'image/soboleva.png')  # поправить стартовые координаты Соболевой
 Soboleva.go_right = True
 Soboleva.go_down = True
 '''Описание ракетки'''
-racket = Sprite(40, 685, 'racket.png')
+racket = Sprite(40, 685, 'image/racket.png')
 
 down = True
 pygame.key.set_repeat(1, 1)
