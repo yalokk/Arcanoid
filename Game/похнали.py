@@ -38,16 +38,24 @@ def Intersect(x1, x2, y1, y2, len1, len2, height1, height2):
         return 1
     else:
         return 0
+    
+    
+'''Подсчет очков'''
+score = 5
 
 '''окно'''
-window = pygame.display.set_mode((600, 700))
+window = pygame.display.set_mode((630, 745))
 pygame.display.set_caption('Оля, смари')
 '''холст'''
-screen = pygame.Surface((600, 700))
-# Создать строку состояния
-
+screen = pygame.Surface((630, 700))
+'''строка состояния'''
+status_bar = pygame.Surface((630, 45))
 x = 0
 y = 0
+
+'''шрифты'''
+pygame.font.init()
+score_font = pygame.font.Font('font/foo.otf', 37)
 
 '''Описание Соболевой (мяч)'''
 Soboleva = Sprite(0, 0, 'image/soboleva.png')  # поправить стартовые координаты Соболевой
@@ -75,11 +83,13 @@ while down:
 
     '''заливка экрана''' 
     screen = pygame.image.load('image/screen.png')
+    '''цвет таблички с жизнями'''
+    status_bar.fill((255, 255, 255)) 
 
-    '''передвижение Соболевой''' # корект движение (отскакивание от пола)
+    '''передвижение Соболевой''' 
     if Soboleva.go_right == True:
         Soboleva.x += 0.7
-        if Soboleva.x > 555:
+        if Soboleva.x > 585:
             Soboleva.go_right = False
     else:
         Soboleva.x -= 0.7
@@ -95,12 +105,21 @@ while down:
         if Soboleva.y <= 0:
             Soboleva.go_down = True
 
+    '''Проверка сталкивания Соболевой и ракетки'''
     if Intersect(racket.x, Soboleva.x, racket.y, Soboleva.y, 60, 45, 20, 45) == True:
         Soboleva.go_down = False
+        
+    '''Минус очки в случае удара НЕ о ракетку'''
+    if Soboleva.y >= 655:
+        score -= 1
 
     '''отрисовка объектов'''
-    racket.render()  # выводим ракетку в нужные координаты
-    Soboleva.render()  # выводим Соболеву в нужные координаты
-    window.blit(screen, (0, 0))
+    racket.render()  
+    Soboleva.render()  
+    '''отрисовка шрифта'''
+    status_bar.blit(score_font.render('Щечки: ' +str(score), 1, (168, 203, 209)), (10, 10))
+    window.blit(status_bar, (0, 0))
+    '''отрисовка холста'''
+    window.blit(screen, (0, 45))
     pygame.display.flip()
     # pygame.time.delay(ЗНАЧ.СКОРОСТИ)  CКОРОСТЬ ГОЛОВЫ
