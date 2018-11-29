@@ -20,9 +20,10 @@ class Brick:
         self.bitmap = pygame.image.load(filename)
         self.score = score
         
-emil = Brick(0, 0, 'image/emil', 10)
-kolya = Brick(245, 70, 'image/kolya', 9)
-zahar = Brick(315, 70, 'image/zahar', 8)
+emil = Brick(0, 0, 'image/emil.png', 10)
+kolya = Brick(245, 70, 'image/kolya.png', 9)
+zahar = Brick(315, 70, 'image/zahar.png', 8)
+bricks = [emil, kolya, zahar]
 #sergo 
 #liza
 #nadya
@@ -114,6 +115,8 @@ while down:
         score -= 1
 
     '''отрисовка объектов'''
+    for i in bricks:
+        i.render()
     racket.render()  
     Soboleva.render()  
     '''отрисовка шрифта'''
