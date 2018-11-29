@@ -21,7 +21,7 @@ class Brick:
         self.score = score
         
 emil = Brick(0, 0, 'image/emil.png', 10)
-kolya = Brick(245, 70, 'image/kolya.png', 9)
+kolya = Brick(245, 70, 'image/kolya.png', 8)
 zahar = Brick(315, 70, 'image/zahar.png', 8)
 bricks = [emil, kolya, zahar]
 #sergo 
