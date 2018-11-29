@@ -18,10 +18,12 @@ def Intersect(x1, x2, y1, y2):
     else:
         return 0
 
-
+'''окно'''
 window = pygame.display.set_mode((600, 700))
 pygame.display.set_caption('Оля, смари')
+'''холст'''
 screen = pygame.Surface((600, 700))
+# Создать строку состояния
 
 x = 0
 y = 0
