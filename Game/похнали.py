@@ -11,7 +11,7 @@ class Sprite:
         screen.blit(self.bitmap, (self.x, self.y))
 
 '''Кирпичи'''     
-class Brick(Sprite):
+class Brick:
     def __init__(self, xpos, ypos, filename):
         self.x = xpos
         self.y = ypos
