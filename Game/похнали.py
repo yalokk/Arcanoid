@@ -1,5 +1,6 @@
 import pygame
 
+
 class Sprite:
     def __init__(self, xpos, ypos, filename):
         self.x = xpos
@@ -10,8 +11,9 @@ class Sprite:
     def render(self):
         screen.blit(self.bitmap, (self.x, self.y))
 
+        
 '''Кирпичи'''     
-class Brick:
+class Brick(Sprite):
     def __init__(self, xpos, ypos, filename, score):
         self.x = xpos
         self.y = ypos
@@ -19,11 +21,9 @@ class Brick:
         self.height = 70
         self.bitmap = pygame.image.load(filename)
         self.score = score
-    def render(self):
-        screen.blit(self.bitmap, (self.x, self.y))
         
         
-    '''Передвижение Эмиля, Захара и Коли'''
+'''Передвижение Эмиля, Захара и Коли'''
 def ezk_go(name, step):
     if name.go_right == True:
         name.x += step
@@ -77,7 +77,7 @@ pygame.font.init()
 score_font = pygame.font.Font('font/foo.otf', 37)
 
 '''Описание Соболевой (мяч)'''
-Soboleva = Sprite(0, 0, 'image/soboleva.png')  # поправить стартовые координаты Соболевой
+Soboleva = Sprite(60, 640, 'image/soboleva.png')  # поправить стартовые координаты Соболевой
 Soboleva.go_right = True
 Soboleva.go_down = True
 step_sob = 5
@@ -119,7 +119,7 @@ while done:
 
     if Soboleva.go_down == True:
         Soboleva.y += step_sob
-        if Soboleva.y > 655:
+        if Soboleva.y >= 655:
             Soboleva.go_down = False
     else:
         Soboleva.y -= step_sob
@@ -135,9 +135,13 @@ while done:
     if Intersect(racket.x, Soboleva.x, racket.y, Soboleva.y, 60, 45, 20, 45) == True:
         Soboleva.go_down = False
         
-    '''Проверка столкновения Соболевой и кирпича'''
+     '''Проверка столкновения Соболевой и кирпича'''
     for i in bricks:
-        pass
+        if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45) == True:
+            Soboleva.go_down = not Soboleva.go_down
+            Soboleva.go_right = not Soboleva.go_right
+            bricks.remove(i)
+            break
 
     '''Минус очки в случае удара о пол'''
     if Soboleva.y == 655:
@@ -149,7 +153,7 @@ while done:
     racket.render()  
     Soboleva.render()  
     '''отрисовка шрифта'''
-    status_bar.blit(score_font.render('Щечки: ' +str(score), 1, (168, 203, 209)), (10, 10))
+    status_bar.blit(score_font.render('Щечки: ' + str(score), 1, (168, 203, 209)), (10, 10))
     window.blit(status_bar, (0, 0))
     '''отрисовка холста'''
     window.blit(screen, (0, 45))
