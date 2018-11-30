@@ -22,6 +22,19 @@ class Brick(Sprite):
         self.bitmap = pygame.image.load(filename)
         self.score = score
         
+    def Intersect_with_Sob(self, sob_x, sob_y):
+        if Intersect(self.x, sob_x, self.y, sob_y, 70, 45, 70, 45) == True:
+            Soboleva.go_down = not Soboleva.go_down
+            Soboleva.go_right = not Soboleva.go_right
+            bricks.remove(i)
+        
+'''Класс для Сереги'''
+class Sergo(Brick):
+    def Intersect_with_Sob(self, sob_x, sob_y):
+        if Intersect(self.x, sob_x, self.y, sob_y, 70, 45, 70, 45) == True:
+            Soboleva.go_down = not Soboleva.go_down
+            Soboleva.go_right = not Soboleva.go_right
+        
         
 '''Передвижение Эмиля, Захара и Коли'''
 def ezk_go(name, step):
@@ -41,15 +54,15 @@ kolya = Brick(0, 70, 'image/kolya.png', 8)
 kolya.go_right = True
 zahar = Brick(560, 70, 'image/zahar.png', 8)
 zahar.go_right = True
-bricks = [emil, kolya, zahar]
-#sergo 
-#liza
-#nadya
-#lesha
-#gleb
-#margo
+sergo = Sergo(560, 140, 'image/sergo.png', 2)
+# liza
+# nadya
+# lesha
+# gleb
+# margo
 
-       
+bricks = [sergo, emil, kolya, zahar]
+
     
 '''Пересечение 2х объектов'''
 def Intersect(x1, x2, y1, y2, len1, len2, height1, height2):
@@ -77,12 +90,12 @@ pygame.font.init()
 score_font = pygame.font.Font('font/foo.otf', 37)
 
 '''Описание Соболевой (мяч)'''
-Soboleva = Sprite(60, 640, 'image/soboleva.png')  # поправить стартовые координаты Соболевой
+Soboleva = Sprite(360, 640, 'image/soboleva.png')  # поправить стартовые координаты Соболевой
 Soboleva.go_right = True
 Soboleva.go_down = True
 step_sob = 5
 '''Описание ракетки'''
-racket = Sprite(40, 685, 'image/racket.png')
+racket = Sprite(340, 685, 'image/racket.png')
 step_rac = 9
 
 '''ИГРОВОЙ ЦИКЛ'''
@@ -136,15 +149,15 @@ while done:
         Soboleva.go_down = False
         
      '''Проверка столкновения Соболевой и кирпича'''
-    for i in bricks:
-        if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45) == True:
-            Soboleva.go_down = not Soboleva.go_down
-            Soboleva.go_right = not Soboleva.go_right
-            bricks.remove(i)
-            break
+    for i in bricks[:1]:
+        i.Intersect_with_Sob(Soboleva.x, Soboleva.y)
+        if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45):
+            step_sob += i.score
+    for i in bricks[1:]:
+        i.Intersect_with_Sob(Soboleva.x, Soboleva.y)
 
     '''Минус очки в случае удара о пол'''
-    if Soboleva.y == 655:
+    if Soboleva.y >= 655:
         score -= 1
 
     '''отрисовка объектов'''
