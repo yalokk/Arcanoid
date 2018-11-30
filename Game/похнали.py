@@ -135,7 +135,11 @@ while done:
     if Intersect(racket.x, Soboleva.x, racket.y, Soboleva.y, 60, 45, 20, 45) == True:
         Soboleva.go_down = False
         
-    '''Минус очки в случае удара НЕ о ракетку'''
+    '''Проверка столкновения Соболевой и кирпича'''
+    for i in bricks:
+        pass
+
+    '''Минус очки в случае удара о пол'''
     if Soboleva.y == 655:
         score -= 1
 
