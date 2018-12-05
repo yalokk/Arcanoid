@@ -1,4 +1,10 @@
 import pygame
+import sys
+
+# from logic import Intersect, Sprite, Brick, Sergo, ezk_go, nl_go
+
+
+'''Класс объектов игры'''
 
 
 class Sprite:
@@ -25,9 +31,9 @@ class Brick(Sprite):
         self.score = score
 
     def Intersect_with_Sob(self, sob_x, sob_y):
-        if Intersect(self.x, sob_x, self.y, sob_y, 70, 45, 70, 45) == True:
+        if Intersect(self.x, sob_x, self.y, sob_y, 70, 45, 70, 45):
             Soboleva.go_down = not Soboleva.go_down
-            #Soboleva.go_right = not Soboleva.go_right
+            # Soboleva.go_right = not Soboleva.go_right
             bricks.remove(i)
 
 
@@ -36,16 +42,16 @@ class Brick(Sprite):
 
 class Sergo(Brick):
     def Intersect_with_Sob(self, sob_x, sob_y):
-        if Intersect(self.x, sob_x, self.y, sob_y, 70, 45, 70, 45) == True:
+        if Intersect(self.x, sob_x, self.y, sob_y, 70, 45, 70, 45):
             Soboleva.go_down = not Soboleva.go_down
-            #Soboleva.go_right = not Soboleva.go_right
+            # Soboleva.go_right = not Soboleva.go_right
 
 
 '''Передвижение Эмиля, Захара и Коли'''
 
 
 def ezk_go(name, step):
-    if name.go_right == True:
+    if name.go_right:
         name.x += step
         if name.x > 560:
             name.go_right = False
@@ -59,7 +65,7 @@ def ezk_go(name, step):
 
 
 def nl_go(name):
-    if name.go_down == True:
+    if name.go_down:
         name.y += 8
         if name.y > 450:
             name.go_down = False
@@ -69,7 +75,17 @@ def nl_go(name):
             name.go_down = True
 
 
+'''Пересечение 2х объектов'''
 
+
+def Intersect(x1, x2, y1, y2, len1, len2, height1, height2):
+    if (x1 > x2 - len1) and (x1 < x2 + len2) and (y1 > y2 - height1) and (y1 < y2 + height2):
+        return 1
+    else:
+        return 0
+
+
+'''Описание кирпичей'''
 emil = Brick(0, 0, 'image/emil.png', 10)
 emil.go_right = True
 
@@ -83,8 +99,8 @@ zahar.go_right = True
 zahar2 = Brick(420, 210, 'image/zahar.png', 8)
 zahar.go_right = True
 
-sergo = Sergo(560, 140, 'image/sergo.png', 2)
-sergo2 = Sergo(0, 140, 'image/sergo.png', 2)
+sergo = Sergo(560, 140, 'image/sergo.png', 0)
+sergo2 = Sergo(0, 140, 'image/sergo.png', 0)
 
 liza = Brick(0, 210, 'image/liza.png', 6)
 liza.go_down = True
@@ -108,30 +124,22 @@ margo = Brick(210, 140, 'image/margo.png', 2)
 margo2 = Brick(350, 140, 'image/margo.png', 2)
 margo3 = Brick(140, 280, 'image/margo.png', 2)
 margo4 = Brick(420, 280, 'image/margo.png', 2)
-'''
+
 andrey = Brick(70, 140, 'image/andrey.png', 4)
 andrey2 = Brick(490, 140, 'image/andrey.png', 4)
 andrey3 = Brick(280, 350, 'image/andrey.png', 4)
-'''
+
 # andrey
 # lesha
 # gleb
 # margo
 
-bricks = [sergo, sergo2, emil, kolya, kolya2, zahar, zahar2, liza, nadya, liza2, nadya2, lesha, lesha2, lesha3, lesha4, gleb, gleb2, gleb3, margo, margo2, margo3, margo4]
+bricks = [sergo, sergo2, emil, kolya, kolya2, zahar, zahar2, liza, nadya, liza2, nadya2, lesha, lesha2, lesha3, lesha4,
+          gleb, gleb2, gleb3, margo, margo2, margo3, margo4, andrey, andrey2, andrey3]
 
-'''Пересечение 2х объектов'''
-
-
-def Intersect(x1, x2, y1, y2, len1, len2, height1, height2):
-    if (x1 > x2 - len1) and (x1 < x2 + len2) and (y1 > y2 - height1) and (y1 < y2 + height2):
-        return 1
-    else:
-        return 0
-
-
-'''Подсчет очков'''
-score = 5
+'''Подсчет здоровья и очков'''
+health = 3
+total_score = 0
 
 '''окно'''
 window = pygame.display.set_mode((630, 705))
@@ -145,6 +153,7 @@ y = 0
 
 '''шрифты'''
 pygame.font.init()
+health_font = pygame.font.Font('font/foo.otf', 37)
 score_font = pygame.font.Font('font/foo.otf', 37)
 
 '''Описание Соболевой (мяч)'''
@@ -157,13 +166,10 @@ stepY_sob = 5
 racket = Sprite(340, 640, 'image/racket.png')
 step_rac = 9
 
-'''ускорение игры при ударе об Серго'''
-step = 1
-
 '''ИГРОВОЙ ЦИКЛ'''
 done = True
 pygame.key.set_repeat(1, 1)
-pygame.time.delay(3)
+pygame.time.delay(1)
 while done:
     '''обработчик событий'''
     for e in pygame.event.get():
@@ -184,7 +190,7 @@ while done:
     status_bar.fill((255, 255, 255))
 
     '''передвижение Соболевой'''
-    if Soboleva.go_right == True:
+    if Soboleva.go_right:
         Soboleva.x += stepX_sob
         if Soboleva.x > 585:
             Soboleva.go_right = False
@@ -193,7 +199,7 @@ while done:
         if Soboleva.x <= 0:
             Soboleva.go_right = True
 
-    if Soboleva.go_down == True:
+    if Soboleva.go_down:
         Soboleva.y += stepY_sob
         if Soboleva.y >= 615:
             Soboleva.go_down = False
@@ -212,22 +218,24 @@ while done:
     nl_go(liza2)
 
     '''Проверка сталкивания Соболевой и ракетки'''
-    if Intersect(racket.x, Soboleva.x, racket.y, Soboleva.y, 60, 45, 20, 45) == True:
+    if Intersect(racket.x, Soboleva.x, racket.y, Soboleva.y, 60, 45, 20, 45):
         Soboleva.go_down = False
 
     '''Проверка столкновения Соболевой и кирпича'''
     for i in bricks[:2]:
         i.Intersect_with_Sob(Soboleva.x, Soboleva.y)
         if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45):
-            stepX_sob += 1
-            stepY_sob += 2
+            stepX_sob += 0.5
+            stepY_sob += 1.5
 
     for i in bricks[2:]:
         i.Intersect_with_Sob(Soboleva.x, Soboleva.y)
+        if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45):
+            total_score += i.score
 
     '''Минус очки в случае удара о пол'''
     if Soboleva.y >= 615:
-        score -= 1
+        health -= 1
 
     '''отрисовка объектов'''
     for i in bricks:
@@ -235,10 +243,10 @@ while done:
     racket.render()
     Soboleva.render()
     '''отрисовка шрифта'''
-    status_bar.blit(score_font.render('Щечки: ' + str(score), 1, (168, 203, 209)), (10, 10))
+    status_bar.blit(health_font.render('Щечки: ' + str(health), 1, (168, 203, 209)), (10, 10))
+    status_bar.blit(score_font.render('Score: ' + str(total_score), 1, (168, 203, 209)), (475, 10))
     window.blit(status_bar, (0, 0))
     '''отрисовка холста'''
     window.blit(screen, (0, 45))
     pygame.display.flip()
     # pygame.time.delay(ЗНАЧ.СКОРОСТИ)  CКОРОСТЬ ГОЛОВЫ
-
