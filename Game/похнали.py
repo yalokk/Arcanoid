@@ -3,6 +3,53 @@ import sys
 
 # from logic import Intersect, Sprite, Brick, Sergo, ezk_go, nl_go
 
+'''Класс Меню'''
+class Menu:
+    def __init__(self, items):
+        self.items = items
+     #items = [x, y, name, color, active_color, number_item]]
+
+    '''Выделение активных пункто меню'''
+    def render(self, area, font, number_item):
+        for i in self.items:
+            if number_item == i[5]:
+                area.blit(font.render(i[2], 1, i[4]), (i[0], i[1]))
+            else:
+                area.blit(font.render(i[2], 1, i[3]), (i[0], i[1]))
+
+    def menu(self):
+        is_game_running = True
+        font_menu = pygame.font.Font('font/Foo.otf', 50)
+        pygame.key.set_repeat(0, 0)
+        pygame.mouse.set_visible(True)
+        item = 0
+        while is_game_running:
+            screen = pygame.image.load('image/menu_down.png')
+            status_bar = pygame.image.load('image/menu_up.png')
+
+            mouse_pos = pygame.mouse.get_pos()
+            for i in self.items:
+                if (mouse_pos[0] > i[0]) and (mouse_pos[0] < (i[0] + 155)) and\
+                        (mouse_pos[1] > i[1] + 45) and (mouse_pos[1] < i[1] + 95):
+                    item = i[5]
+            self.render(screen, font_menu, item)
+
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    sys.exit()
+                if e.type == pygame.KEYDOWN:
+                    if e.key == pygame.K_ESCAPE:
+                        sys.exit()
+                if e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
+                    if item == 0:
+                        is_game_running = False
+                    elif item == 1:
+                        sys.exit()
+
+            window.blit(status_bar, (0, 0))
+            window.blit(screen, (0,45))
+            pygame.display.flip()
+
 
 '''Класс объектов игры'''
 
@@ -167,16 +214,25 @@ stepY_sob = 5
 racket = Sprite(340, 640, 'image/racket.png')
 step_rac = 9
 
+'''создаем меню'''
+items = [(260, 500, 'Game', (254, 9, 13), (250, 216, 25), 0),
+          (265, 570, 'Quit', (254, 9, 13), (250, 216, 25), 1)]
+game = Menu(items)
+game.menu()
+
 '''ИГРОВОЙ ЦИКЛ'''
-done = True
+
+'''подготовка к запуску игры'''
+is_game_running = True
 pygame.key.set_repeat(1, 1)
-pygame.time.delay(1)
-while done:
-    '''обработчик событий'''
+pygame.mouse.set_visible(False)
+total_score = 0
+while is_game_running:
+    '''Обработчик событий'''
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
-            done = False
-        '''перемещение ракетки с помощью клавиш'''
+            is_game_running = False
+        '''событие - перемещение ракетки с помощью клавиш'''
         if e.type == pygame.KEYDOWN:
             if e.key == pygame.K_LEFT:
                 if racket.x > 0:
@@ -184,6 +240,10 @@ while done:
             if e.key == pygame.K_RIGHT:
                 if racket.x < 570:
                     racket.x += step_rac
+            if e.key == pygame.K_ESCAPE:
+                game.menu()
+                pygame.key.set_repeat(1, 1)
+                pygame.mouse.set_visible(False)
 
     '''заливка экрана'''
     screen = pygame.image.load('image/screen.png')
@@ -247,9 +307,8 @@ while done:
     racket.render()
     Soboleva.render()
     '''отрисовка шрифта'''
-    status_bar.blit(health_font.render('Щечки: ' + str(health), 0, (255, 218, 33)), (10, 10))
-    status_bar.blit(score_font.render('Score: ' + str(total_score), 0, (255, 218, 33)), (475, 10))
-    status_bar.blit(quit_in_menu_font.render('QUIT', 0, (252, 8, 10)), (270, 5))
+    status_bar.blit(health_font.render('Щечки: ' + str(health), 0, (252, 8, 10)), (10, 10))
+    status_bar.blit(score_font.render('Score: ' + str(total_score), 0, (252, 8, 10)), (475, 10))
     window.blit(status_bar, (0, 0))
     '''отрисовка холста'''
     window.blit(screen, (0, 45))
