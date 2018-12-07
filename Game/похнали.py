@@ -236,9 +236,9 @@ game.menu()
 '''Звук'''
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.mixer.init()
-sound = pygame.mixer.Sound('funnyENG.ogg')
+sound = pygame.mixer.Sound('mus/funnyENG.ogg')
 sound.play(-1)
-hit = mixer.Sound('Sergo.ogg')
+hit = mixer.Sound('mus/Sergo.ogg')
 
 '''ИГРОВОЙ ЦИКЛ'''
 
