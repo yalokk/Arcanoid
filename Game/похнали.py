@@ -1,5 +1,6 @@
 import pygame
 import sys
+from pygame import mixer
 
 # from logic import Intersect, Sprite, Brick, Sergo, ezk_go, nl_go
 
@@ -84,7 +85,7 @@ class Brick(Sprite):
             bricks.remove(i)
 
 
-'''Класс для Сереги'''
+'''Класс для любимого Сереги'''
 
 
 class Sergo(Brick):
@@ -160,32 +161,39 @@ liza = Brick(0, 210, 'image/liza.png', 6)
 liza.go_down = True
 nadya = Brick(560, 210, 'image/nadya.png', 6)
 nadya.go_down = True
-liza2 = Brick(70, 420, 'image/liza.png', 6)
+liza2 = Brick(490, 280, 'image/liza.png', 6)
 liza2.go_down = False
-nadya2 = Brick(490, 420, 'image/nadya.png', 6)
+nadya2 = Brick(70, 280, 'image/nadya.png', 6)
 nadya2.go_down = False
 
 lesha = Brick(280, 140, 'image/lesha.png', 4)
 lesha2 = Brick(210, 210, 'image/lesha.png', 4)
 lesha3 = Brick(350, 210, 'image/lesha.png', 4)
 lesha4 = Brick(280, 280, 'image/lesha.png', 4)
+lesha5 = Brick(70, 350, 'image/lesha.png', 4)
 
 gleb = Brick(140, 140, 'image/gleb.png', 4)
 gleb2 = Brick(420, 140, 'image/gleb.png', 4)
 gleb3 = Brick(210, 280, 'image/gleb.png', 4)
+gleb4 = Brick(350, 280, 'image/gleb.png', 4)
+gleb5 = Brick(560, 350, 'image/gleb.png', 4)
 
 margo = Brick(210, 140, 'image/margo.png', 2)
 margo2 = Brick(350, 140, 'image/margo.png', 2)
 margo3 = Brick(140, 280, 'image/margo.png', 2)
 margo4 = Brick(420, 280, 'image/margo.png', 2)
+margo5 = Brick(0, 350, 'image/margo.png', 2)
 
 andrey = Brick(70, 140, 'image/andrey.png', 4)
-andrey2 = Brick(490, 140, 'image/andrey.png', 4)
-andrey3 = Brick(280, 350, 'image/andrey.png', 4)
+andrey2 = Brick(280, 210, 'image/andrey.png', 4)
+andrey3 = Brick(490, 140, 'image/andrey.png', 4)
+andrey4 = Brick(490, 350, 'image/andrey.png', 4)
 
 
 bricks = [sergo, sergo2, emil, kolya, kolya2, zahar, zahar2, liza, nadya, liza2, nadya2, lesha, lesha2, lesha3, lesha4,
-          gleb, gleb2, gleb3, margo, margo2, margo3, margo4, andrey, andrey2, andrey3]
+          lesha5,
+          gleb, gleb2, gleb3, gleb4, gleb5, margo, margo2, margo3, margo4, margo5, andrey, andrey2, andrey3, andrey4]
+
 
 '''Подсчет здоровья и очков'''
 health = 3
@@ -209,7 +217,7 @@ pygame.font.init()
 health_font = pygame.font.Font('font/AC Line.otf', 25)
 score_font = pygame.font.Font('font/AC Line.otf', 25)
 
-'''Описание Соболевой (мяч)'''
+'''Описание пашки Соболевой (мяч)'''
 Soboleva = Sprite(360, 600, 'image/soboleva.png')  # поправить стартовые координаты Соболевой
 Soboleva.go_right = True
 Soboleva.go_down = True
@@ -224,6 +232,13 @@ items = [(260, 500, 'Game', (254, 9, 13), (250, 216, 25), 0),
           (265, 570, 'Quit', (254, 9, 13), (250, 216, 25), 1)]
 game = Menu(items)
 game.menu()
+
+'''Звук'''
+pygame.mixer.pre_init(44100, -16, 1, 512)
+pygame.mixer.init()
+sound = pygame.mixer.Sound('funnyENG.ogg')
+sound.play(-1)
+hit = mixer.Sound('Sergo.ogg')
 
 '''ИГРОВОЙ ЦИКЛ'''
 
@@ -304,6 +319,7 @@ while is_game_running:
 
     '''Минус очки в случае удара о пол'''
     if Soboleva.y >= 615:
+        hit.play()
         health -= 1
 
     '''отрисовка объектов'''
