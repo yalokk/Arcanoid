@@ -223,17 +223,19 @@ while done:
         Soboleva.go_down = False
 
     '''Проверка столкновения Соболевой и кирпича'''
-    for i in bricks[:2]:
-        i.Intersect_with_Sob(Soboleva.x, Soboleva.y)
-        if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45):
-            stepX_sob += 0.5
-            stepY_sob += 1.5
+    for i in bricks:
+        if i in bricks[:2]:
+            if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45):
+                i.Intersect_with_Sob(Soboleva.x, Soboleva.y)
+                stepX_sob += 0.5
+                stepY_sob += 1.5
+                break
 
-    for i in bricks[2:]:
-        i.Intersect_with_Sob(Soboleva.x, Soboleva.y)
-        if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45):
-            total_score += i.score
-            break
+        if i in bricks[2:]:
+            if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45):
+                i.Intersect_with_Sob(Soboleva.x, Soboleva.y)
+                total_score += i.score
+                break
 
     '''Минус очки в случае удара о пол'''
     if Soboleva.y >= 615:
