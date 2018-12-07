@@ -122,7 +122,7 @@ def ezk_go(name, step):
 def nl_go(name):
     if name.go_down:
         name.y += 8
-        if name.y > 450:
+        if name.y >= 280:
             name.go_down = False
     else:
         name.y -= 8
