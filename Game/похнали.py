@@ -2,7 +2,6 @@ import pygame
 import sys
 from pygame import mixer
 
-# from logic import Intersect, Sprite, Brick, Sergo, ezk_go, nl_go
 
 '''Класс Меню'''
 class Menu:
@@ -78,21 +77,24 @@ class Brick(Sprite):
         self.bitmap = pygame.image.load(filename)
         self.score = score
 
-    def Intersect_with_Sob(self, sob_x, sob_y):
-        if Intersect(self.x, sob_x, self.y, sob_y, 70, 45, 70, 45):
+        def Intersect_with_Sob(self, sob_x, sob_y):
+
+        if ((sob_x + 45 >= self.x) and (sob_x + 45 <= self.x + 10)) or\
+                    ((sob_x <= self.x + 70) and (sob_x >= self.x + 60)):
+                Soboleva.go_right = not Soboleva.go_right
+
+        elif ((sob_y + 45 >= self.y) and (sob_y + 45 <= self.y + 10)) or\
+                    ((sob_y <= self.y + 70) and (sob_y >= self.y + 60)):
+                Soboleva.go_down = not Soboleva.go_down
+        else:
             Soboleva.go_down = not Soboleva.go_down
-            # Soboleva.go_right = not Soboleva.go_right
-            bricks.remove(i)
 
 
 '''Класс для любимого Сереги'''
 
-
 class Sergo(Brick):
-    def Intersect_with_Sob(self, sob_x, sob_y):
-        if Intersect(self.x, sob_x, self.y, sob_y, 70, 45, 70, 45):
-            Soboleva.go_down = not Soboleva.go_down
-            # Soboleva.go_right = not Soboleva.go_right
+    pass
+
 
 '''Класс объектов строки состояния'''
 
@@ -154,8 +156,8 @@ zahar.go_right = True
 zahar2 = Brick(420, 210, 'image/zahar.png', 8)
 zahar.go_right = True
 
-sergo = Sergo(560, 140, 'image/sergo.png', 0)
-sergo2 = Sergo(0, 140, 'image/sergo.png', 0)
+sergo = Brick(560, 140, 'image/sergo.png', 0)
+sergo2 = Brick(0, 140, 'image/sergo.png', 0)
 
 liza = Brick(0, 210, 'image/liza.png', 6)
 liza.go_down = True
@@ -190,9 +192,8 @@ andrey3 = Brick(490, 140, 'image/andrey.png', 4)
 andrey4 = Brick(490, 350, 'image/andrey.png', 4)
 
 
-bricks = [sergo, sergo2, emil, kolya, kolya2, zahar, zahar2, liza, nadya, liza2, nadya2, lesha, lesha2, lesha3, lesha4,
-          lesha5,
-          gleb, gleb2, gleb3, gleb4, gleb5, margo, margo2, margo3, margo4, margo5, andrey, andrey2, andrey3, andrey4]
+bricks = [emil, kolya, kolya2, zahar, zahar2, liza, nadya, liza2, nadya2, lesha, lesha2, lesha3, lesha4,
+          gleb, gleb2, gleb3, margo, margo2, margo3, margo4, andrey, andrey2, andrey3, sergo, sergo2]
 
 
 '''Подсчет здоровья и очков'''
@@ -270,7 +271,7 @@ while is_game_running:
     '''информационная строка'''
     status_bar = pygame.image.load('image/status_bar.png')
 
-    '''передвижение Соболевой'''
+    '''передвижение Соболевой - столкновение о стены'''
     if Soboleva.go_right:
         Soboleva.x += stepX_sob
         if Soboleva.x > 585:
@@ -304,17 +305,18 @@ while is_game_running:
 
     '''Проверка столкновения Соболевой и кирпича'''
     for i in bricks:
-        if i in bricks[:2]:
+        if i in bricks[-2:]:
             if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45):
                 i.Intersect_with_Sob(Soboleva.x, Soboleva.y)
                 stepX_sob += 0.5
                 stepY_sob += 1.5
                 break
 
-        if i in bricks[2:]:
+        if i in bricks[:-2]:
             if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45):
                 i.Intersect_with_Sob(Soboleva.x, Soboleva.y)
                 total_score += i.score
+                bricks.remove(i)
                 break
 
     '''Минус очки в случае удара о пол'''
@@ -327,7 +329,7 @@ while is_game_running:
         i.render()
     racket.render()
     Soboleva.render()
-    '''отрисовка зобр. инф. строки и текста'''
+    '''отрисовка показателей и текста строки состояния'''
     score_image.render()
     health_image.render()
     status_bar.blit(score_font.render(str(total_score), 0, (0, 0, 0)), (73, 12))
