@@ -153,8 +153,9 @@ y = 0
 
 '''шрифты'''
 pygame.font.init()
-health_font = pygame.font.Font('font/foo.otf', 37)
-score_font = pygame.font.Font('font/foo.otf', 37)
+health_font = pygame.font.Font('font/foo.otf', 32)
+score_font = pygame.font.Font('font/foo.otf', 32)
+quit_in_menu_font = pygame.font.Font('font/Rounds Black.otf', 35)
 
 '''Описание Соболевой (мяч)'''
 Soboleva = Sprite(360, 600, 'image/soboleva.png')  # поправить стартовые координаты Соболевой
@@ -187,7 +188,7 @@ while done:
     '''заливка экрана'''
     screen = pygame.image.load('image/screen.png')
     '''цвет таблички с жизнями'''
-    status_bar.fill((255, 255, 255))
+    status_bar.fill((255, 232, 232))
 
     '''передвижение Соболевой'''
     if Soboleva.go_right:
@@ -232,6 +233,7 @@ while done:
         i.Intersect_with_Sob(Soboleva.x, Soboleva.y)
         if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45):
             total_score += i.score
+            break
 
     '''Минус очки в случае удара о пол'''
     if Soboleva.y >= 615:
@@ -243,8 +245,9 @@ while done:
     racket.render()
     Soboleva.render()
     '''отрисовка шрифта'''
-    status_bar.blit(health_font.render('Щечки: ' + str(health), 1, (168, 203, 209)), (10, 10))
-    status_bar.blit(score_font.render('Score: ' + str(total_score), 1, (168, 203, 209)), (475, 10))
+    status_bar.blit(health_font.render('Щечки: ' + str(health), 0, (255, 218, 33)), (10, 10))
+    status_bar.blit(score_font.render('Score: ' + str(total_score), 0, (255, 218, 33)), (475, 10))
+    status_bar.blit(quit_in_menu_font.render('QUIT', 0, (252, 8, 10)), (270, 5))
     window.blit(status_bar, (0, 0))
     '''отрисовка холста'''
     window.blit(screen, (0, 45))
