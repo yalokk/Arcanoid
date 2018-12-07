@@ -93,6 +93,13 @@ class Sergo(Brick):
             Soboleva.go_down = not Soboleva.go_down
             # Soboleva.go_right = not Soboleva.go_right
 
+'''Класс объектов строки состояния'''
+
+
+class Indicator(Sprite):
+    def render(self):
+        status_bar.blit(self.bitmap, (self.x, self.y))
+
 
 '''Передвижение Эмиля, Захара и Коли'''
 
@@ -176,10 +183,6 @@ andrey = Brick(70, 140, 'image/andrey.png', 4)
 andrey2 = Brick(490, 140, 'image/andrey.png', 4)
 andrey3 = Brick(280, 350, 'image/andrey.png', 4)
 
-# andrey
-# lesha
-# gleb
-# margo
 
 bricks = [sergo, sergo2, emil, kolya, kolya2, zahar, zahar2, liza, nadya, liza2, nadya2, lesha, lesha2, lesha3, lesha4,
           gleb, gleb2, gleb3, margo, margo2, margo3, margo4, andrey, andrey2, andrey3]
@@ -197,12 +200,14 @@ screen = pygame.Surface((630, 660))
 status_bar = pygame.Surface((630, 45))
 x = 0
 y = 0
+health_image = Indicator(537, 7, 'image/health.png')
+score_image = Indicator(33, 7, 'image/score.png')
 
-'''шрифты'''
+
+'''шрифты строки состояния'''
 pygame.font.init()
-health_font = pygame.font.Font('font/foo.otf', 32)
-score_font = pygame.font.Font('font/foo.otf', 32)
-quit_in_menu_font = pygame.font.Font('font/Rounds Black.otf', 35)
+health_font = pygame.font.Font('font/AC Line.otf', 25)
+score_font = pygame.font.Font('font/AC Line.otf', 25)
 
 '''Описание Соболевой (мяч)'''
 Soboleva = Sprite(360, 600, 'image/soboleva.png')  # поправить стартовые координаты Соболевой
@@ -247,8 +252,8 @@ while is_game_running:
 
     '''заливка экрана'''
     screen = pygame.image.load('image/screen.png')
-    '''цвет таблички с жизнями'''
-    status_bar.fill((255, 232, 232))
+    '''информационная строка'''
+    status_bar = pygame.image.load('image/status_bar.png')
 
     '''передвижение Соболевой'''
     if Soboleva.go_right:
@@ -306,11 +311,12 @@ while is_game_running:
         i.render()
     racket.render()
     Soboleva.render()
-    '''отрисовка шрифта'''
-    status_bar.blit(health_font.render('Щечки: ' + str(health), 0, (252, 8, 10)), (10, 10))
-    status_bar.blit(score_font.render('Score: ' + str(total_score), 0, (252, 8, 10)), (475, 10))
+    '''отрисовка зобр. инф. строки и текста'''
+    score_image.render()
+    health_image.render()
+    status_bar.blit(score_font.render(str(total_score), 0, (0, 0, 0)), (73, 12))
+    status_bar.blit(health_font.render(str(health), 0, (0, 0, 0)), (578, 12))
     window.blit(status_bar, (0, 0))
     '''отрисовка холста'''
     window.blit(screen, (0, 45))
     pygame.display.flip()
-    # pygame.time.delay(ЗНАЧ.СКОРОСТИ)  CКОРОСТЬ ГОЛОВЫ
