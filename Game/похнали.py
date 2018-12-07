@@ -77,15 +77,15 @@ class Brick(Sprite):
         self.bitmap = pygame.image.load(filename)
         self.score = score
 
-        def Intersect_with_Sob(self, sob_x, sob_y):
+    def Intersect_with_Sob(self, sob_x, sob_y):
 
         if ((sob_x + 45 >= self.x) and (sob_x + 45 <= self.x + 10)) or\
                     ((sob_x <= self.x + 70) and (sob_x >= self.x + 60)):
-                Soboleva.go_right = not Soboleva.go_right
+            Soboleva.go_right = not Soboleva.go_right
 
         elif ((sob_y + 45 >= self.y) and (sob_y + 45 <= self.y + 10)) or\
                     ((sob_y <= self.y + 70) and (sob_y >= self.y + 60)):
-                Soboleva.go_down = not Soboleva.go_down
+            Soboleva.go_down = not Soboleva.go_down
         else:
             Soboleva.go_down = not Soboleva.go_down
 
