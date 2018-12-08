@@ -2,14 +2,17 @@ import pygame
 import sys
 from pygame import mixer
 
-
 '''Класс Меню'''
+
+
 class Menu:
     def __init__(self, items):
         self.items = items
-     #items = [x, y, name, color, active_color, number_item]]
+
+    # items = [x, y, name, color, active_color, number_item]]
 
     '''Выделение активных пункто меню'''
+
     def render(self, area, font, number_item):
         for i in self.items:
             if number_item == i[5]:
@@ -29,7 +32,7 @@ class Menu:
 
             mouse_pos = pygame.mouse.get_pos()
             for i in self.items:
-                if (mouse_pos[0] > i[0]) and (mouse_pos[0] < (i[0] + 155)) and\
+                if (mouse_pos[0] > i[0]) and (mouse_pos[0] < (i[0] + 155)) and \
                         (mouse_pos[1] > i[1] + 45) and (mouse_pos[1] < i[1] + 95):
                     item = i[5]
             self.render(screen, font_menu, item)
@@ -47,7 +50,7 @@ class Menu:
                         sys.exit()
 
             window.blit(status_bar, (0, 0))
-            window.blit(screen, (0,45))
+            window.blit(screen, (0, 45))
             pygame.display.flip()
 
 
@@ -65,7 +68,7 @@ class Sprite:
         screen.blit(self.bitmap, (self.x, self.y))
 
 
-'''Кирпичи'''
+'''Подкласс Кирпичи'''
 
 
 class Brick(Sprite):
@@ -79,21 +82,15 @@ class Brick(Sprite):
 
     def Intersect_with_Sob(self, sob_x, sob_y):
 
-        if ((sob_x + 45 >= self.x) and (sob_x + 45 <= self.x + 10)) or\
-                    ((sob_x <= self.x + 70) and (sob_x >= self.x + 60)):
+        if ((sob_x + 45 >= self.x) and (sob_x + 45 <= self.x + 10)) or \
+                ((sob_x <= self.x + 70) and (sob_x >= self.x + 60)):
             Soboleva.go_right = not Soboleva.go_right
 
-        elif ((sob_y + 45 >= self.y) and (sob_y + 45 <= self.y + 10)) or\
-                    ((sob_y <= self.y + 70) and (sob_y >= self.y + 60)):
+        elif ((sob_y + 45 >= self.y) and (sob_y + 45 <= self.y + 10)) or \
+                ((sob_y <= self.y + 70) and (sob_y >= self.y + 60)):
             Soboleva.go_down = not Soboleva.go_down
         else:
             Soboleva.go_down = not Soboleva.go_down
-
-
-'''Класс для любимого Сереги'''
-
-class Sergo(Brick):
-    pass
 
 
 '''Класс объектов строки состояния'''
@@ -103,6 +100,35 @@ class Indicator(Sprite):
     def render(self):
         status_bar.blit(self.bitmap, (self.x, self.y))
 
+
+'''Функции для окончания игры'''
+
+
+def game_over():
+    if health == 0:
+        return True
+    else:
+        return False
+
+
+def congratulations():
+    if len(bricks) == 2:
+        return True
+    else:
+        return False
+
+def start():
+    health = 3
+    game_over()
+    total_score = 0
+    bricks = [emil, kolya, kolya2, zahar, zahar2, liza, nadya, liza2, nadya2, lesha, lesha2, lesha3, lesha4,
+              gleb, gleb2, gleb3, gleb4, margo, margo2, margo3, margo4, andrey, andrey2, andrey3, sergo, sergo2]
+    Soboleva = Sprite(360, 600, 'image/soboleva.png')
+    Soboleva.go_right = True
+    Soboleva.go_down = True
+    stepX_sob = 2
+    stepY_sob = 5
+    racket = Sprite(340, 640, 'image/racket.png')
 
 '''Передвижение Эмиля, Захара и Коли'''
 
@@ -191,10 +217,8 @@ andrey2 = Brick(280, 210, 'image/andrey.png', 4)
 andrey3 = Brick(490, 140, 'image/andrey.png', 4)
 andrey4 = Brick(490, 350, 'image/andrey.png', 4)
 
-
 bricks = [emil, kolya, kolya2, zahar, zahar2, liza, nadya, liza2, nadya2, lesha, lesha2, lesha3, lesha4,
-          gleb, gleb2, gleb3, margo, margo2, margo3, margo4, andrey, andrey2, andrey3, sergo, sergo2]
-
+          gleb, gleb2, gleb3, gleb4, margo, margo2, margo3, margo4, andrey, andrey2, andrey3, sergo, sergo2]
 
 '''Подсчет здоровья и очков'''
 health = 3
@@ -212,11 +236,18 @@ y = 0
 health_image = Indicator(537, 7, 'image/health.png')
 score_image = Indicator(33, 7, 'image/score.png')
 
-
-'''шрифты строки состояния'''
+'''шрифты строки состояния, cooбщений о конце игры'''
 pygame.font.init()
 health_font = pygame.font.Font('font/AC Line.otf', 25)
 score_font = pygame.font.Font('font/AC Line.otf', 25)
+mes_game_over = pygame.font.Font('font/foo.otf', 95)
+mes_congratulations = pygame.font.Font('font/foo.otf', 64)
+mess_send_down = pygame.font.Font('font/foo.otf', 35)
+mes_pressEsc = pygame.font.Font('font/AC Line.otf', 25)
+
+'''Конец игры'''
+screen_end = pygame.Surface((630, 660))
+status_bar_end = pygame.Surface((630, 45))
 
 '''Описание пашки Соболевой (мяч)'''
 Soboleva = Sprite(360, 600, 'image/soboleva.png')  # поправить стартовые координаты Соболевой
@@ -230,7 +261,7 @@ step_rac = 9
 
 '''создаем меню'''
 items = [(260, 500, 'Game', (254, 9, 13), (250, 216, 25), 0),
-          (265, 570, 'Quit', (254, 9, 13), (250, 216, 25), 1)]
+         (265, 570, 'Quit', (254, 9, 13), (250, 216, 25), 1)]
 game = Menu(items)
 game.menu()
 
@@ -238,6 +269,7 @@ game.menu()
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.mixer.init()
 sound = pygame.mixer.Sound('mus/funnyENG.ogg')
+'''Воспроизведение звука'''
 sound.play(-1)
 hit = mixer.Sound('mus/Sergo.ogg')
 
@@ -248,25 +280,85 @@ is_game_running = True
 pygame.key.set_repeat(1, 1)
 pygame.mouse.set_visible(False)
 total_score = 0
+pygame.mixer.pause()
+
 while is_game_running:
+
+    '''Игра проиграна'''
+    while game_over():
+        pygame.mixer.pause()
+        screen_end = pygame.image.load('image/screen_end.png')
+        status_bar_end = pygame.image.load('image/status_bar_end.png')
+        screen_end.blit(mes_game_over.render('GAME OVER', 0, (252, 8, 10)), (75, 300))
+        screen_end.blit(mess_send_down.render('Ученики нокаутировали Вас', 0, (252, 8, 10)), (65, 400))
+        screen_end.blit(mes_pressEsc.render('Чтобы вернуться в Меню, нажмите Esc', 1, (0, 0, 0)), (150, 500))
+
+        window.blit(status_bar_end, (0, 0))
+        window.blit(screen_end, (0, 45))
+
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                health = 3
+                game_over()
+                is_game_running = False
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_ESCAPE:
+                    start()
+                    game.menu()
+                    pygame.key.set_repeat(1, 1)
+                    pygame.mouse.set_visible(False)
+        pygame.display.flip()
+
+    '''Игра выиграна'''
+    while congratulations():
+        pygame.mixer.pause()
+        screen_end = pygame.image.load('image/screen_end.png')
+        status_bar_end = pygame.image.load('image/status_bar_end.png')
+        screen_end.blit(mes_congratulations.render('CONGRATULATIONS', 0, (41, 162, 78)), (30, 300))
+        screen_end.blit(mess_send_down.render('Вы исключили всех учеников!', 0, (41, 162, 78)), (120, 380))
+        screen_end.blit(mes_pressEsc.render('Чтобы вернуться в Меню, нажмите Esc', 1, (0, 0, 0)), (150, 500))
+
+
+        window.blit(status_bar_end, (0, 0))
+        window.blit(screen_end, (0, 45))
+
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                start()
+                congratulations()
+                is_game_running = False
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_ESCAPE:
+                    start()
+                    congratulations()
+                    game.menu()
+                    pygame.key.set_repeat(1, 1)
+                    pygame.mouse.set_visible(False)
+        pygame.display.flip()
+
+    pygame.mixer.unpause()
+
     '''Обработчик событий'''
     for e in pygame.event.get():
+
         if e.type == pygame.QUIT:
             is_game_running = False
-        '''событие - перемещение ракетки с помощью клавиш'''
+
         if e.type == pygame.KEYDOWN:
+            '''событие - перемещение ракетки с помощью клавиш'''
             if e.key == pygame.K_LEFT:
                 if racket.x > 0:
                     racket.x -= step_rac
             if e.key == pygame.K_RIGHT:
                 if racket.x < 570:
                     racket.x += step_rac
+            '''событие - выход в меню'''
             if e.key == pygame.K_ESCAPE:
                 game.menu()
                 pygame.key.set_repeat(1, 1)
                 pygame.mouse.set_visible(False)
 
-    '''заливка экрана'''
+    '''фон игры'''
     screen = pygame.image.load('image/screen.png')
     '''информационная строка'''
     status_bar = pygame.image.load('image/status_bar.png')
@@ -307,7 +399,7 @@ while is_game_running:
     for i in bricks:
         if i in bricks[-2:]:
             if Intersect(i.x, Soboleva.x, i.y, Soboleva.y, 70, 45, 70, 45):
-                i.Intersect_with_Sob(Soboleva.x, Soboleva.y)
+                Soboleva.go_down = not Soboleva.go_down
                 stepX_sob += 0.5
                 stepY_sob += 1.5
                 break
@@ -323,6 +415,10 @@ while is_game_running:
     if Soboleva.y >= 615:
         hit.play()
         health -= 1
+
+    '''Проверка окончания игры'''
+    game_over()
+    congratulations()
 
     '''отрисовка объектов'''
     for i in bricks:
