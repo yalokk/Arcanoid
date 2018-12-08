@@ -117,6 +117,7 @@ def congratulations():
     else:
         return False
 
+
 def start():
     health = 3
     game_over()
@@ -129,6 +130,7 @@ def start():
     stepX_sob = 2
     stepY_sob = 5
     racket = Sprite(340, 640, 'image/racket.png')
+
 
 '''Передвижение Эмиля, Захара и Коли'''
 
@@ -317,7 +319,6 @@ while is_game_running:
         screen_end.blit(mes_congratulations.render('CONGRATULATIONS', 0, (41, 162, 78)), (30, 300))
         screen_end.blit(mess_send_down.render('Вы исключили всех учеников!', 0, (41, 162, 78)), (120, 380))
         screen_end.blit(mes_pressEsc.render('Чтобы вернуться в Меню, нажмите Esc', 1, (0, 0, 0)), (150, 500))
-
 
         window.blit(status_bar_end, (0, 0))
         window.blit(screen_end, (0, 45))
