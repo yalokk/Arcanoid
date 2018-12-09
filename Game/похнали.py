@@ -82,13 +82,12 @@ class Brick(Sprite):
 
     def Intersect_with_Sob(self, sob_x, sob_y):
 
-        if ((sob_x + 45 >= self.x) and (sob_x + 45 <= self.x + 10)) or \
-                ((sob_x <= self.x + 70) and (sob_x >= self.x + 60)):
-            Soboleva.go_right = not Soboleva.go_right
-
-        elif ((sob_y + 45 >= self.y) and (sob_y + 45 <= self.y + 10)) or \
+        if ((sob_y + 45 >= self.y) and (sob_y + 45 <= self.y + 10)) or \
                 ((sob_y <= self.y + 70) and (sob_y >= self.y + 60)):
             Soboleva.go_down = not Soboleva.go_down
+        elif ((sob_x + 45 >= self.x) and (sob_x + 45 <= self.x + 10)) or \
+                ((sob_x <= self.x + 70) and (sob_x >= self.x + 60)):
+            Soboleva.go_right = not Soboleva.go_right
         else:
             Soboleva.go_down = not Soboleva.go_down
 
@@ -112,24 +111,10 @@ def game_over():
 
 
 def congratulations():
-    if len(bricks) == 2:
+    if total_score == 118:
         return True
     else:
         return False
-
-
-def start():
-    health = 3
-    game_over()
-    total_score = 0
-    bricks = [emil, kolya, kolya2, zahar, zahar2, liza, nadya, liza2, nadya2, lesha, lesha2, lesha3, lesha4,
-              gleb, gleb2, gleb3, gleb4, margo, margo2, margo3, margo4, andrey, andrey2, andrey3, sergo, sergo2]
-    Soboleva = Sprite(360, 600, 'image/soboleva.png')
-    Soboleva.go_right = True
-    Soboleva.go_down = True
-    stepX_sob = 2
-    stepY_sob = 5
-    racket = Sprite(340, 640, 'image/racket.png')
 
 
 '''Передвижение Эмиля, Захара и Коли'''
@@ -281,61 +266,9 @@ hit = mixer.Sound('mus/Sergo.ogg')
 is_game_running = True
 pygame.key.set_repeat(1, 1)
 pygame.mouse.set_visible(False)
-total_score = 0
 pygame.mixer.pause()
 
 while is_game_running:
-
-    '''Игра проиграна'''
-    while game_over():
-        pygame.mixer.pause()
-        screen_end = pygame.image.load('image/screen_end.png')
-        status_bar_end = pygame.image.load('image/status_bar_end.png')
-        screen_end.blit(mes_game_over.render('GAME OVER', 0, (252, 8, 10)), (75, 300))
-        screen_end.blit(mess_send_down.render('Ученики нокаутировали Вас', 0, (252, 8, 10)), (65, 400))
-        screen_end.blit(mes_pressEsc.render('Чтобы вернуться в Меню, нажмите Esc', 1, (0, 0, 0)), (150, 500))
-
-        window.blit(status_bar_end, (0, 0))
-        window.blit(screen_end, (0, 45))
-
-        for e in pygame.event.get():
-            if e.type == pygame.QUIT:
-                health = 3
-                game_over()
-                is_game_running = False
-            if e.type == pygame.KEYDOWN:
-                if e.key == pygame.K_ESCAPE:
-                    start()
-                    game.menu()
-                    pygame.key.set_repeat(1, 1)
-                    pygame.mouse.set_visible(False)
-        pygame.display.flip()
-
-    '''Игра выиграна'''
-    while congratulations():
-        pygame.mixer.pause()
-        screen_end = pygame.image.load('image/screen_end.png')
-        status_bar_end = pygame.image.load('image/status_bar_end.png')
-        screen_end.blit(mes_congratulations.render('CONGRATULATIONS', 0, (41, 162, 78)), (30, 300))
-        screen_end.blit(mess_send_down.render('Вы исключили всех учеников!', 0, (41, 162, 78)), (120, 380))
-        screen_end.blit(mes_pressEsc.render('Чтобы вернуться в Меню, нажмите Esc', 1, (0, 0, 0)), (150, 500))
-
-        window.blit(status_bar_end, (0, 0))
-        window.blit(screen_end, (0, 45))
-
-        for e in pygame.event.get():
-            if e.type == pygame.QUIT:
-                start()
-                congratulations()
-                is_game_running = False
-            if e.type == pygame.KEYDOWN:
-                if e.key == pygame.K_ESCAPE:
-                    start()
-                    congratulations()
-                    game.menu()
-                    pygame.key.set_repeat(1, 1)
-                    pygame.mouse.set_visible(False)
-        pygame.display.flip()
 
     pygame.mixer.unpause()
 
@@ -355,6 +288,7 @@ while is_game_running:
                     racket.x += step_rac
             '''событие - выход в меню'''
             if e.key == pygame.K_ESCAPE:
+                pygame.mixer.pause()
                 game.menu()
                 pygame.key.set_repeat(1, 1)
                 pygame.mouse.set_visible(False)
@@ -417,10 +351,6 @@ while is_game_running:
         hit.play()
         health -= 1
 
-    '''Проверка окончания игры'''
-    game_over()
-    congratulations()
-
     '''отрисовка объектов'''
     for i in bricks:
         i.render()
@@ -435,3 +365,58 @@ while is_game_running:
     '''отрисовка холста'''
     window.blit(screen, (0, 45))
     pygame.display.flip()
+
+    '''Проверка окончания игры'''
+    game_over()
+    congratulations()
+
+    '''Игра проиграна'''
+    while game_over():
+        pygame.mixer.pause()
+        screen_end = pygame.image.load('image/screen_end.png')
+        status_bar_end = pygame.image.load('image/status_bar_end.png')
+        screen_end.blit(mes_game_over.render('GAME OVER', 0, (252, 8, 10)), (75, 300))
+        screen_end.blit(mess_send_down.render('Ученики нокаутировали Вас', 0, (252, 8, 10)), (65, 400))
+        screen_end.blit(mes_pressEsc.render('Чтобы выйти из игры, нажмите Q', 1, (0, 0, 0)), (150, 500))
+
+        window.blit(status_bar_end, (0, 0))
+        window.blit(screen_end, (0, 45))
+
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                is_game_running = False
+                break
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_q:
+                    is_game_running = False
+                    break
+
+        if is_game_running is False:
+            break
+
+        pygame.display.flip()
+
+    '''Игра выиграна'''
+    while congratulations():
+        pygame.mixer.pause()
+        screen_end = pygame.image.load('image/screen_end.png')
+        status_bar_end = pygame.image.load('image/status_bar_end.png')
+        screen_end.blit(mes_congratulations.render('CONGRATULATIONS', 0, (41, 162, 78)), (30, 300))
+        screen_end.blit(mess_send_down.render('Вы исключили всех учеников!', 0, (41, 162, 78)), (120, 380))
+        screen_end.blit(mes_pressEsc.render('Чтобы выйти из игры, нажмите Q', 1, (0, 0, 0)), (150, 500))
+
+        window.blit(status_bar_end, (0, 0))
+        window.blit(screen_end, (0, 45))
+
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                is_game_running = False
+                break
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_q:
+                    is_game_running = False
+                    break
+
+        if is_game_running is False:
+            break
+        pygame.display.flip()
